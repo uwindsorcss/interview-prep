@@ -29,12 +29,12 @@ public class Graph<T> {
   // set.
   void connect(T u, T v) {
     _adjacencyMap.putIfAbsent(u, new HashSet<T>());
-    _adjacentMap.get(u).add(v);
+    _adjacencyMap.get(u).add(v);
   }
 
   // Disconnect u from v.
   void disconnect(T u, T v) {
-    _adjacentMap.getOrDefault(u, new HashSet<T>()).remove(v);
+    _adjacencyMap.getOrDefault(u, new HashSet<T>()).remove(v);
   }
 
   // Connect u to v and v to u.
