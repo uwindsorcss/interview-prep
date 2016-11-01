@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -16,8 +17,7 @@ int edit_distance(std::string a, std::string b) {
       } else if (a[i - 1] == b[j - 1]) {
         dp[i][j] = dp[i - 1][j - 1];
       } else {
-        dp[i][j] = 1 + std::min(dp[i - 1][j - 1],
-                                std::min(dp[i - 1][j], dp[i][j - 1]));
+        dp[i][j] = 1 + std::min({dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]});
       }
     }
   }
