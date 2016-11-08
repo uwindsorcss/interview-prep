@@ -16,6 +16,10 @@ class graph:
         self.connect(b, a)
 
     def get_adjacent(self, node):
+        # dict's get method returns the value for key node if it exists,
+        # or returns the second argument otherwise.
+        # Unlike the setdefault method it does not then set the second argument
+        # as the value of the key for the dict.
         return self._adj_map.get(node, set())
 
     def get_topo_sorted_list(self):
@@ -33,6 +37,7 @@ class graph:
             if node not in marked:
                 _visit(node)
         
+        # this is a list comprehension, if you'd like to know what to google
         return [node for node in stack]
 
 if __name__ == "__main__":
