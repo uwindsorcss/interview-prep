@@ -38,7 +38,7 @@ class graph:
                 _visit(node)
         
         # this is a list comprehension, if you'd like to know what to google
-        return [node for node in stack]
+        return stack
 
 if __name__ == "__main__":
     # Stuff in here would only be run if the script was
