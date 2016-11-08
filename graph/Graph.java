@@ -25,6 +25,9 @@ import java.util.*;
 public class Graph<T> {
   private HashMap<T, HashSet<T>> _adjacencyMap;
 
+  Graph() {
+    _adjacencyMap = new HashMap<T, HashSet<T>>();
+  }
   // Connecting two nodes is as easy as inserting one in the others adjacent
   // set.
   void connect(T u, T v) {
@@ -47,5 +50,36 @@ public class Graph<T> {
   // set will be returned.
   HashSet<T> adjacentTo(T u) {
     return _adjacencyMap.getOrDefault(u, new HashSet<T>());
+  }
+
+  // Returns a topological ordering of the current graph.
+  ArrayList<T> topoSort() {
+    Stack<T> stk = new Stack<T>();
+    HashSet<T> marked = new HashSet<T>();
+
+    for (Map.Entry<T, HashSet<T>> entry : _adjacencyMap.entrySet()) {
+      if (!marked.contains(entry.getKey())) {
+        visit(entry.getKey(), marked, stk);
+      }
+    }
+
+    ArrayList<T> topoSorted = new ArrayList<T>();
+    while (!stk.empty()) {
+      topoSorted.add(stk.pop());
+    }
+
+    return topoSorted;
+  }
+
+  // Does a post order traversal of the graph, adding visited
+  // elements to a stack used to find the topological ordering.
+  private void visit(T u, HashSet<T> marked, Stack<T> stk) {
+    if (!marked.contains(u)) {
+      for (T neighb : adjacentTo(u)) {
+        visit(neighb, marked, stk);
+      }
+      marked.add(u);
+      stk.push(u);
+    }
   }
 }
