@@ -14,7 +14,7 @@ public class GraphTest {
     g.connect(11, 10);
     g.connect(8, 9);
 
-    ArrayList<Integer> topoSorted = g.topoSort();
+    ArrayList<Integer> topoSorted = g.topoSort2();
 
     for (Integer i : topoSorted) {
       System.out.println(i);

@@ -24,20 +24,29 @@ import java.util.*;
 // }
 public class Graph<T> {
   private HashMap<T, HashSet<T>> _adjacencyMap;
+  private HashMap<T, Integer> _incomingEdges;
 
   Graph() {
     _adjacencyMap = new HashMap<T, HashSet<T>>();
+    _incomingEdges = new HashMap<T, Integer>();
   }
+
   // Connecting two nodes is as easy as inserting one in the others adjacent
   // set.
   void connect(T u, T v) {
     _adjacencyMap.putIfAbsent(u, new HashSet<T>());
     _adjacencyMap.get(u).add(v);
+    _incomingEdges.putIfAbsent(u, 0);
+    _incomingEdges.putIfAbsent(v, 0);
+    _incomingEdges.put(v, _incomingEdges.get(v) + 1);
   }
 
   // Disconnect u from v.
   void disconnect(T u, T v) {
     _adjacencyMap.getOrDefault(u, new HashSet<T>()).remove(v);
+    if (_incomingEdges.containsKey(v)) {
+      _incomingEdges.put(v, _incomingEdges.get(v) - 1);
+    }
   }
 
   // Connect u to v and v to u.
@@ -81,5 +90,37 @@ public class Graph<T> {
       marked.add(u);
       stk.push(u);
     }
+  }
+
+  // Alternative version of topological sort that uses a breadth-first search
+  // and a map which keeps track of incoming edges for each vertex.
+  ArrayList<T> topoSort2() {
+    ArrayList<T> topoSorted = new ArrayList<T>();
+    Queue<T> q = new LinkedList<T>();
+
+    for (Map.Entry<T, Integer> entry : _incomingEdges.entrySet()) {
+      if (entry.getValue().intValue() == 0) {
+        q.add(entry.getKey());
+      }
+    }
+
+    while (!q.isEmpty()) {
+      T front = q.poll();
+      topoSorted.add(front);
+
+      ArrayList<T> toBeDeleted = new ArrayList<T>();
+      for (T neighb : adjacentTo(front)) {
+        toBeDeleted.add(neighb);
+        if (_incomingEdges.get(neighb).intValue() == 1) {
+          q.add(neighb);
+        }
+      }
+
+      for (T u : toBeDeleted) {
+        disconnect(front, u);
+      }
+    }
+
+    return topoSorted;
   }
 }
