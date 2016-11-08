@@ -36,8 +36,7 @@ class graph:
         for node, neigbours in self._adj_map.items():
             if node not in marked:
                 _visit(node)
-        
-        # this is a list comprehension, if you'd like to know what to google
+
         return stack
 
 if __name__ == "__main__":
@@ -45,13 +44,13 @@ if __name__ == "__main__":
     # called as an executable, and not if it was imported as a library.
     # This can be useful as a place to have tests for a library.
     g = graph()
-    
+
     g.connect(5, 11)
     g.connect(7, 11)
     g.connect(7, 8)
     g.connect(3, 8)
     g.connect(3, 10)
-    g.connect(11, 2)
+    g.connect(11, 2
     g.connect(11, 9)
     g.connect(11, 10)
     g.connect(8, 9)
