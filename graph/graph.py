@@ -37,6 +37,7 @@ class graph:
             if node not in marked:
                 _visit(node)
 
+        stack.reverse()
         return stack
 
 if __name__ == "__main__":
@@ -50,7 +51,7 @@ if __name__ == "__main__":
     g.connect(7, 8)
     g.connect(3, 8)
     g.connect(3, 10)
-    g.connect(11, 2
+    g.connect(11, 2)
     g.connect(11, 9)
     g.connect(11, 10)
     g.connect(8, 9)
