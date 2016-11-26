@@ -1,35 +1,36 @@
 #include <iostream>
-#include <unordered_map>
+#include <memory>
 #include <queue>
+#include <unordered_map>
 
 struct trie_node {
   bool word_end = false;
-  std::unordered_map<char, trie_node*> children;
+  std::unordered_map<char, std::unique_ptr<trie_node>> children;
 };
 
 class trie {
-public:
+ public:
   trie() : root(new trie_node()) {}
 
   void insert(const std::string& s) {
-    trie_node* cur = root;
+    trie_node* cur = root.get();
     for (const char& c : s) {
       if (cur->children.find(c) == cur->children.end()) {
-        cur->children.insert({c, new trie_node()});
+        cur->children.emplace(c, new trie_node());
       }
-      cur = cur->children[c];
+      cur = cur->children[c].get();
     }
     cur->word_end = true;
   }
 
   // Determines if s is in the trie.
   bool contains(const std::string& s) const {
-    trie_node* cur = root;
+    trie_node* cur = root.get();
     for (const char& c : s) {
       if (cur->children.find(c) == cur->children.end()) {
         return false;
       }
-      cur = cur->children[c];
+      cur = cur->children[c].get();
     }
     return true;
   }
@@ -37,7 +38,7 @@ public:
   // Determines if there are any complete words in the trie that are a prefix of
   // s.
   bool has_prefix(const std::string& s) const {
-    trie_node* cur = root;
+    trie_node* cur = root.get();
     for (const char& c : s) {
       if (cur->word_end) {
         return true;
@@ -45,26 +46,13 @@ public:
       if (cur->children.find(c) == cur->children.end()) {
         return false;
       }
-      cur = cur->children[c];
+      cur = cur->children[c].get();
     }
     return false;
   }
 
-  // Performs a breadth-first search of the trie and deletes all of the nodes.
-  ~trie() {
-    std::queue<trie_node*> q;
-    q.push(root);
-    while (!q.empty()) {
-      trie_node* front = q.front();
-      q.pop();
-      for (auto p : front->children) {
-        q.push(p.second);
-      }
-      delete front;
-    }
-  }
-private:
-  trie_node* root;
+ private:
+  std::unique_ptr<trie_node> root;
 };
 
 int main() {
